@@ -104,12 +104,6 @@ Visit 👉 [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 📷 Preview
-
-*(Add screenshots or GIFs here once you run the app!)*
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please fork the repo and submit a pull request with improvements.
