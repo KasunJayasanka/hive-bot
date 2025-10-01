@@ -3,7 +3,8 @@
 
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import clsx from "clsx";
-import { sendToHiveBot } from "@/services/hiveBot";
+import { askRag, askRagWithImage } from "@/services/rag";
+
 import { ChatItem, PendingFile } from "./types";
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
@@ -45,25 +46,21 @@ export default function HiveBot() {
     };
   }, []);
 
-  // Auto-resize textarea effect moved to ChatInput
-
   // Scroll to bottom
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const el = bodyRef.current;
         if (!el) return;
-        el.scrollTop = el.scrollHeight;
+        el.scrollTo({ top: el.scrollHeight, behavior });
       });
     });
   }, []);
 
-  // Scroll when messages change
   useEffect(() => {
     scrollToBottom("smooth");
   }, [messages, scrollToBottom]);
 
-  // Scroll when the container grows (images/fonts/layout)
   useEffect(() => {
     if (!bodyRef.current) return;
     const ro = new ResizeObserver(() => {
@@ -85,33 +82,62 @@ export default function HiveBot() {
 
   const sendMessage = async () => {
     if (!canSend || sending) return;
+
     const userId = crypto.randomUUID();
     const botId = crypto.randomUUID();
 
+    // capture current inputs BEFORE clearing
+    const inputToSend = input.trim();
+    const fileToSend = pendingFile ? { ...pendingFile } : null;
+
+    // Push user message + bot "thinking"
     setMessages((m) => [
       ...m,
-      { id: userId, role: "user", text: input.trim() || undefined, fileDataUrl: pendingFile?.dataUrl },
+      {
+        id: userId,
+        role: "user",
+        text: inputToSend || undefined,
+        fileDataUrl: fileToSend?.dataUrl, // still shows preview
+      },
       { id: botId, role: "bot", text: undefined },
     ]);
 
     setSending(true);
-    const inputToSend = input.trim();
-    const fileToSend = pendingFile ? { ...pendingFile } : null;
 
+    // Clear inputs
     setPendingFile(null);
     setInput("");
 
     try {
-      const payload = {
-        message: inputToSend,
-        file: fileToSend ? { data: fileToSend.data, mime_type: fileToSend.mime_type } : undefined,
-      };
-      const { text } = await sendToHiveBot(payload);
+      // 🔑 Choose API based on whether an image is present
+      const { text, sources } = fileToSend
+        ? await askRagWithImage(inputToSend, { data: fileToSend.data, mime_type: fileToSend.mime_type })
+        : await askRag(inputToSend);
+
       const cleaned = decodeHtmlEntities(text ?? "");
-      setMessages((m) => m.map((x) => (x.id === botId ? { ...x, text: cleaned || "…" } : x)));
+
+      // Primary bot answer
+      setMessages((m) =>
+        m.map((x) => (x.id === botId ? { ...x, text: cleaned || "…" } : x))
+      );
+
+      // OPTIONAL: append compact sources bubble
+      if (sources && sources.length) {
+        const srcId = crypto.randomUUID();
+        setMessages((m) => [
+          ...m,
+          {
+            id: srcId,
+            role: "bot",
+            text: `Sources: ${sources.join(", ")}`,
+          },
+        ]);
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to reach the server.";
-      setMessages((m) => m.map((x) => (x.id === botId ? { ...x, text: `⚠️ ${msg}` } : x)));
+      setMessages((m) =>
+        m.map((x) => (x.id === botId ? { ...x, text: `⚠️ ${msg}` } : x))
+      );
     } finally {
       setSending(false);
     }
@@ -124,13 +150,15 @@ export default function HiveBot() {
         "bg-white dark:bg-gray-900 shadow-xl md:rounded-2xl",
         "border border-gray-200 dark:border-gray-700"
       )}
-      style={{
-        height: "calc(var(--vvh, 1vh) * 100)",
-      }}
+      style={{ height: "calc(var(--vvh, 1vh) * 100)" }}
     >
       <ChatHeader />
 
-      <ChatMessages ref={bodyRef} messages={messages} onContentLoad={() => scrollToBottom("smooth")} />
+      <ChatMessages
+        ref={bodyRef}
+        messages={messages}
+        onContentLoad={() => scrollToBottom("smooth")}
+      />
 
       <ChatInput
         input={input}
