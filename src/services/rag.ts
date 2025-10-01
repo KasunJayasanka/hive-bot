@@ -6,7 +6,7 @@ export async function askRag(message: string) {
   const { data } = await http.post<{ text: string; sources: string[] }>("/api/rag/ask", {
     message,
     topK: 6,
-    minSim: 0.55,
+    minSim: 0.25,
   });
   return data;
 }
@@ -20,7 +20,7 @@ export async function askRagWithImage(
     message,
     file: file ?? null,
     topK: 6,
-    minSim: 0.55,
+    minSim: 0.25,
   });
   return data;
 }
