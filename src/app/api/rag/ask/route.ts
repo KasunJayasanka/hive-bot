@@ -46,7 +46,7 @@ function isGreetingOrChitchat(message: string): string | null {
 // Detect identity/meta questions about the bot
 function isIdentityQuestion(message: string): boolean {
     const normalized = message.toLowerCase().trim();
-    
+
     const identityPatterns = [
         'who are you',
         'what are you',
@@ -63,8 +63,31 @@ function isIdentityQuestion(message: string): boolean {
         'what is hive bot',
         'who is hive bot'
     ];
-    
+
     return identityPatterns.some(pattern => normalized.includes(pattern));
+}
+
+// Deduplicate results to prevent too many chunks from the same URL
+function deduplicateResults<T extends { url?: string | null; similarity?: number | null }>(
+    results: T[],
+    maxPerUrl: number = 2
+): T[] {
+    const urlCounts = new Map<string, number>();
+    const deduplicated: T[] = [];
+
+    // Results are already sorted by similarity (highest first)
+    for (const result of results) {
+        const url = result.url ?? "unknown";
+        const count = urlCounts.get(url) ?? 0;
+
+        // Allow up to maxPerUrl chunks from the same URL
+        if (count < maxPerUrl) {
+            deduplicated.push(result);
+            urlCounts.set(url, count + 1);
+        }
+    }
+
+    return deduplicated;
 }
 
 // Generate chitchat responses
@@ -94,7 +117,7 @@ function getChitchatResponse(type: string): string {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { message, file, topK = 6, minSim = 0.7 } = body;
+        const { message, file, topK = 6, minSim = 0.25 } = body;
 
         if (!message?.trim()) {
             return NextResponse.json({ error: "Message is required" }, { status: 400 });
@@ -149,11 +172,12 @@ export async function POST(req: NextRequest) {
         const [queryVec] = await embedTexts([searchQuery]);
 
         // 3) Vector similarity search in Supabase
+        // Fetch more results initially for better deduplication
         const { data: matches, error: dbError } = await supabaseAdmin.rpc(
             "match_documents",
             {
                 query_embedding: queryVec,
-                match_count: topK,
+                match_count: topK * 3, // Fetch 3x to allow for deduplication
                 match_threshold: minSim,
             }
         );
@@ -171,22 +195,26 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // 5) Build context from top matches
+        // 5) Deduplicate results to prevent redundant chunks from same URL
         type MatchRow = {
             url?: string | null;
             content?: string | null;
             similarity?: number | null;
         };
 
-        const context = (matches as MatchRow[] | null | undefined)
-            ? (matches as MatchRow[]).map((m) => ({
-                url: m.url ?? "Unknown source",
-                text: m.content ?? "",
-                similarity: m.similarity ?? 0,
-            }))
-            : [];
+        const deduplicatedMatches = deduplicateResults(matches as MatchRow[], 2);
 
-        // 6) Create the prompt with updated system message
+        // Take top K after deduplication
+        const finalMatches = deduplicatedMatches.slice(0, topK);
+
+        // 6) Build context from top matches
+        const context = finalMatches.map((m) => ({
+            url: m.url ?? "Unknown source",
+            text: m.content ?? "",
+            similarity: m.similarity ?? 0,
+        }));
+
+        // 7) Create the prompt with updated system message
         const systemPrompt = `You are Hive Bot, a helpful AI assistant that answers questions using website content.
 
 Your role:
@@ -203,7 +231,7 @@ Your role:
 
         const userPrompt = `Context from website:\n\n${contextText}\n\nUser question: ${trimmedMessage}\n\nProvide a helpful answer using the context above.`;
 
-        // 7) Generate response with Gemini
+        // 8) Generate response with Gemini
         type GeminiPart = {
             text?: string;
             inline_data?: {
@@ -229,7 +257,7 @@ Your role:
 
         const answer = await generateContent(parts);
 
-        // 8) Extract unique source URLs
+        // 9) Extract unique source URLs
         const sources = [...new Set(context.map((c) => c.url))].slice(0, 3);
 
         return NextResponse.json({
