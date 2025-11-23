@@ -10,6 +10,19 @@ import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 
+// Generate UUID with fallback for environments where crypto.randomUUID is not available
+function generateUUID() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback UUID v4 generator
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 // HTML entity decoder
 function decodeHtmlEntities(str: string) {
   if (!str) return str;
@@ -22,7 +35,7 @@ function decodeHtmlEntities(str: string) {
 export default function HiveBot() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatItem[]>([
-    { id: crypto.randomUUID(), role: "bot", text: "Hey there 👋\nHow can I help you today?" },
+    { id: generateUUID(), role: "bot", text: "Hey there 👋\nHow can I help you today?" },
   ]);
   const [pendingFile, setPendingFile] = useState<PendingFile | null>(null);
   const [sending, setSending] = useState(false);
@@ -83,8 +96,8 @@ export default function HiveBot() {
   const sendMessage = async () => {
     if (!canSend || sending) return;
 
-    const userId = crypto.randomUUID();
-    const botId = crypto.randomUUID();
+    const userId = generateUUID();
+    const botId = generateUUID();
 
     // capture current inputs BEFORE clearing
     const inputToSend = input.trim();
@@ -123,7 +136,7 @@ export default function HiveBot() {
 
       // OPTIONAL: append compact sources bubble
       if (sources && sources.length) {
-        const srcId = crypto.randomUUID();
+        const srcId = generateUUID();
         setMessages((m) => [
           ...m,
           {
