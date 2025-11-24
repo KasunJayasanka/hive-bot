@@ -8,38 +8,56 @@ import { analyzeImage } from "@/lib/vision";
 // Helper function to detect greetings and chitchat
 function isGreetingOrChitchat(message: string): string | null {
     const normalized = message.toLowerCase().trim();
-    
+
     // Greetings
     const greetings = [
-        'hi', 'hello', 'hey', 'greetings', 'good morning', 'good afternoon', 
+        'hi', 'hello', 'hey', 'greetings', 'good morning', 'good afternoon',
         'good evening', 'howdy', 'sup', 'yo', "what's up", 'whats up'
     ];
-    
+
     // Gratitude
     const thanks = [
         'thank you', 'thanks', 'thx', 'thank u', 'ty', 'appreciated',
         'appreciate it', 'many thanks'
     ];
-    
+
     // Farewells
     const farewells = [
         'bye', 'goodbye', 'see you', 'see ya', 'later', 'farewell',
         'take care', 'have a good day'
     ];
-    
+
+    // Casual small talk
+    const smallTalk = [
+        'how are you', 'how r u', 'how are u',
+        'how is your day', "how's your day", 'hows your day',
+        'how is the day', "how's the day", 'hows the day',
+        "how's it going", 'hows it going', 'how is it going',
+        "how've you been", 'how have you been',
+        "what's new", 'whats new',
+        'how do you do',
+        'how are things',
+        'how are you doing'
+    ];
+
     // Check for exact matches or very short messages
     if (greetings.some(g => normalized === g || normalized.startsWith(g + ' '))) {
         return "greeting";
     }
-    
+
     if (thanks.some(t => normalized.includes(t))) {
         return "thanks";
     }
-    
+
     if (farewells.some(f => normalized === f || normalized.includes(f))) {
         return "farewell";
     }
-    
+
+    // Check for small talk patterns
+    if (smallTalk.some(s => normalized.includes(s))) {
+        return "smalltalk";
+    }
+
     return null;
 }
 
@@ -107,9 +125,15 @@ function getChitchatResponse(type: string): string {
             "Goodbye! Feel free to come back anytime. 👋",
             "Take care! Let me know if you need help later.",
             "See you! Don't hesitate to reach out if you have questions. 👋",
+        ],
+        smalltalk: [
+            "I'm doing great, thanks for asking! 😊 How can I help you with information from the website today?",
+            "I'm here and ready to help! Is there anything specific you'd like to know about?",
+            "All good here! I'm ready to answer your questions. What would you like to know?",
+            "Doing well, thank you! What brings you here today? I'm happy to help with any questions.",
         ]
     };
-    
+
     const options = responses[type as keyof typeof responses] || responses.greeting;
     return options[Math.floor(Math.random() * options.length)];
 }
