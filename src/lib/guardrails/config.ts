@@ -55,13 +55,27 @@ export const PROFANITY_PATTERNS = [
 ];
 
 // SQL injection patterns
+// These patterns are designed to catch actual SQL injection attempts while minimizing false positives
 export const SQL_INJECTION_PATTERNS = [
+  // Classic SQL injection patterns with SQL keywords
   /(\bUNION\b.*\bSELECT\b)|(\bSELECT\b.*\bFROM\b.*\bWHERE\b)/i,
   /(\bDROP\b.*\bTABLE\b)|(\bDELETE\b.*\bFROM\b)|(\bINSERT\b.*\bINTO\b)/i,
-  /(\bEXEC\b.*\()|(\bEXECUTE\b.*\()/i,
-  /(--|#|\/\*|\*\/)/,
-  /(\bOR\b.*=.*)|(\bAND\b.*=.*)/i,
-  /('|"|;|\||&|\$|`)/,
+  /(\bEXEC\b.*\()|(\bEXECUTE\b.*\()|(\bEXEC\b\s+\w+)/i,
+
+  // SQL comments (but only when followed by SQL-like content or quotes)
+  /(['"].*--|--.*['"]|\/\*.*\*\/.*['"])/i,
+
+  // OR/AND injection patterns (require quotes AND operators together)
+  /(['"].*\b(OR|AND)\b.*=.*['"])|(\b(OR|AND)\b\s+['"]?\d+['"]?\s*=\s*['"]?\d+['"]?)/i,
+
+  // Common SQL injection patterns with quotes and operators
+  /('+\s*(OR|AND)\s+'+\s*=\s*'+)|("+\s*(OR|AND)\s+"+\s*=\s*"+)/i,
+
+  // Semicolon followed by SQL keywords (stacked queries)
+  /;\s*(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC)/i,
+
+  // SQL string escape attempts
+  /(\\x[0-9a-f]{2}|%[0-9a-f]{2}).*\b(SELECT|UNION|INSERT|UPDATE|DELETE)/i,
 ];
 
 // XSS patterns
