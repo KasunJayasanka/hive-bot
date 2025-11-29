@@ -70,7 +70,7 @@ export default function SplineRobot({
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative w-full h-full ${className}`}>
       {/* Loading spinner */}
       {isLoading && !hasError && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -90,16 +90,18 @@ export default function SplineRobot({
 
       {/* Spline component - only render if no error */}
       {!hasError && (
-        <Spline
-          scene={sceneUrl}
-          onLoad={handleLoad}
-          onError={handleError}
-          className="w-full h-full"
-          style={{
-            width: '100%',
-            height: '100%',
-          }}
-        />
+        <div className="absolute inset-0 w-full h-full">
+          <Spline
+            scene={sceneUrl}
+            onLoad={handleLoad}
+            onError={handleError}
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'block',
+            }}
+          />
+        </div>
       )}
     </div>
   );
