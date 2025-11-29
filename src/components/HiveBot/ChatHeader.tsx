@@ -3,9 +3,9 @@ import BeeCharacter from "./BeeCharacter";
 
 export default function ChatHeader() {
   return (
-    <div className="flex-shrink-0 flex items-center justify-between bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-4 shadow-lg md:rounded-t-2xl">
+    <div className="flex-shrink-0 flex items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-4 shadow-lg md:rounded-t-2xl">
       <div className="flex items-center gap-3 animate-slide-in-left">
-        <div className="relative w-32 h-32 rounded-full bg-white/10 backdrop-blur-sm transition-transform duration-300 hover:scale-105">
+        <div className="relative w-20 h-20 rounded-full bg-white/10 backdrop-blur-sm transition-transform duration-300 hover:scale-105">
           <div className="absolute inset-0 overflow-hidden rounded-full">
             <BeeCharacter />
           </div>
