@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 import { embedTexts } from "@/lib/embeddings";
 import { generateContent } from "@/lib/geminiClient";
 import { analyzeImage } from "@/lib/vision";
+import { guardRails } from "@/lib/guardrails";
 
 // Helper function to detect greetings and chitchat
 function isGreetingOrChitchat(message: string): string | null {
@@ -143,11 +144,22 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { message, file, topK = 6, minSim = 0.25 } = body;
 
-        if (!message?.trim()) {
-            return NextResponse.json({ error: "Message is required" }, { status: 400 });
+        // Guard rail validation
+        const validationResult = await guardRails.validateMessageRequest(
+            req,
+            message,
+            file ? {
+                size: file.size || 0,
+                type: file.mime_type || 'application/octet-stream',
+                name: file.name || 'file'
+            } : undefined
+        );
+
+        if (!validationResult.isValid) {
+            return validationResult.response!;
         }
 
-        const trimmedMessage = message.trim();
+        const trimmedMessage = validationResult.sanitizedMessage || message.trim();
 
         // Check for greetings/chitchat or identity questions
         const chitchatType = isGreetingOrChitchat(trimmedMessage);
@@ -284,8 +296,14 @@ Your role:
         // 9) Extract unique source URLs
         const sources = [...new Set(context.map((c) => c.url))].slice(0, 3);
 
+        // Validate and sanitize response
+        const responseValidation = guardRails.validateResponse(
+            answer || '',
+            validationResult.requestId
+        );
+
         return NextResponse.json({
-            text: answer,
+            text: responseValidation.sanitizedResponse,
             sources,
         });
 
