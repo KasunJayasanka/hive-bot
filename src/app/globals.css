@@ -293,3 +293,267 @@ input, textarea, select {
     z-index: 9999 !important;
   }
 }
+
+/* ---------- Markdown Content Styles ---------- */
+.markdown-content {
+  line-height: 1.6;
+}
+
+/* Headings */
+.markdown-content h1 {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+.markdown-content h2 {
+  font-size: 1.3em;
+  font-weight: 700;
+  margin-top: 0.9em;
+  margin-bottom: 0.45em;
+  line-height: 1.3;
+}
+
+.markdown-content h3 {
+  font-size: 1.15em;
+  font-weight: 600;
+  margin-top: 0.8em;
+  margin-bottom: 0.4em;
+  line-height: 1.3;
+}
+
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  font-size: 1em;
+  font-weight: 600;
+  margin-top: 0.7em;
+  margin-bottom: 0.35em;
+  line-height: 1.3;
+}
+
+/* First heading has no top margin */
+.markdown-content > :first-child {
+  margin-top: 0 !important;
+}
+
+/* Last element has no bottom margin */
+.markdown-content > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Paragraphs */
+.markdown-content p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Lists */
+.markdown-content ul,
+.markdown-content ol {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-left: 1.5em;
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
+.markdown-content li {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.markdown-content li > p {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+/* Nested lists */
+.markdown-content ul ul,
+.markdown-content ol ul {
+  list-style-type: circle;
+}
+
+.markdown-content ul ul ul,
+.markdown-content ol ul ul,
+.markdown-content ol ol ul {
+  list-style-type: square;
+}
+
+/* Bold and italic */
+.markdown-content strong {
+  font-weight: 700;
+}
+
+.markdown-content em {
+  font-style: italic;
+}
+
+/* Code */
+.markdown-content code {
+  background-color: rgba(175, 184, 193, 0.2);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content code {
+    background-color: rgba(110, 118, 129, 0.4);
+  }
+}
+
+.markdown-content pre {
+  background-color: rgba(175, 184, 193, 0.15);
+  padding: 1em;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content pre {
+    background-color: rgba(110, 118, 129, 0.3);
+  }
+}
+
+.markdown-content pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875em;
+}
+
+/* Links */
+.markdown-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+  text-decoration-color: rgba(59, 130, 246, 0.4);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.markdown-content a:hover {
+  text-decoration-color: rgba(59, 130, 246, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content a {
+    color: #60a5fa;
+    text-decoration-color: rgba(96, 165, 250, 0.4);
+  }
+
+  .markdown-content a:hover {
+    text-decoration-color: rgba(96, 165, 250, 1);
+  }
+}
+
+/* Blockquotes */
+.markdown-content blockquote {
+  border-left: 3px solid #d1d5db;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+  color: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content blockquote {
+    border-left-color: #4b5563;
+    color: #9ca3af;
+  }
+}
+
+/* Tables (GitHub Flavored Markdown) */
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+  overflow-x: auto;
+  display: block;
+}
+
+.markdown-content thead {
+  background-color: rgba(175, 184, 193, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content thead {
+    background-color: rgba(110, 118, 129, 0.2);
+  }
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid #d1d5db;
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content th,
+  .markdown-content td {
+    border-color: #4b5563;
+  }
+}
+
+.markdown-content th {
+  font-weight: 600;
+}
+
+.markdown-content tr:nth-child(even) {
+  background-color: rgba(175, 184, 193, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content tr:nth-child(even) {
+    background-color: rgba(110, 118, 129, 0.1);
+  }
+}
+
+/* Horizontal rule */
+.markdown-content hr {
+  border: 0;
+  border-top: 1px solid #d1d5db;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-content hr {
+    border-top-color: #4b5563;
+  }
+}
+
+/* Strikethrough (GFM) */
+.markdown-content del {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Task lists (GFM) */
+.markdown-content input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+
+.markdown-content li.task-list-item {
+  list-style-type: none;
+  margin-left: -1.5em;
+}
+
+.markdown-content li.task-list-item > input[type="checkbox"] {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
