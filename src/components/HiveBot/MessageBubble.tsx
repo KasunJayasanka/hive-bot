@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Bot, User } from "lucide-react";
 import { ChatItem } from "./types";
 import ThinkingDots from "./ThinkingDots";
+import { SourcesList } from "./SourcesList";
 
 interface MessageBubbleProps {
   item: ChatItem;
@@ -51,7 +52,10 @@ export default function MessageBubble({ item, onContentLoad }: MessageBubbleProp
                 <ThinkingDots />
               </div>
             ) : (
-              <div className="text-sm sm:text-base leading-relaxed">{item.text}</div>
+              <>
+                <div className="text-sm sm:text-base leading-relaxed">{item.text}</div>
+                {item.sources && item.sources.length > 0 && <SourcesList sources={item.sources} />}
+              </>
             )}
           </div>
         )}

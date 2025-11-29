@@ -6,6 +6,7 @@ export interface ChatItem {
   role: Role;
   text?: string;
   fileDataUrl?: string;
+  sources?: string[];
 }
 
 export interface PendingFile {
