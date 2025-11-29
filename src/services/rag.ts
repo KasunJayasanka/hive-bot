@@ -14,7 +14,7 @@ export async function askRag(message: string) {
 // Extended: RAG with optional image
 export async function askRagWithImage(
   message: string,
-  file?: { data: string; mime_type: string } | null
+  file?: { data: string; mime_type: string; size?: number; name?: string } | null
 ) {
   const { data } = await http.post<{ text: string; sources: string[] }>("/api/rag/ask", {
     message,

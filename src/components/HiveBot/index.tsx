@@ -88,7 +88,13 @@ export default function HiveBot() {
     reader.onload = (ev) => {
       const dataUrl = String(ev.target?.result);
       const base64 = dataUrl.split(",")[1];
-      setPendingFile({ data: base64, mime_type: file.type, dataUrl });
+      setPendingFile({
+        data: base64,
+        mime_type: file.type,
+        dataUrl,
+        size: file.size,
+        name: file.name,
+      });
     };
     reader.readAsDataURL(file);
   };
@@ -124,7 +130,12 @@ export default function HiveBot() {
     try {
       // 🔑 Choose API based on whether an image is present
       const { text, sources } = fileToSend
-        ? await askRagWithImage(inputToSend, { data: fileToSend.data, mime_type: fileToSend.mime_type })
+        ? await askRagWithImage(inputToSend, {
+            data: fileToSend.data,
+            mime_type: fileToSend.mime_type,
+            size: fileToSend.size,
+            name: fileToSend.name,
+          })
         : await askRag(inputToSend);
 
       const cleaned = decodeHtmlEntities(text ?? "");

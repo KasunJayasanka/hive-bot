@@ -13,4 +13,6 @@ export interface PendingFile {
   data: string;
   mime_type: string;
   dataUrl: string;
+  size: number;
+  name: string;
 }
