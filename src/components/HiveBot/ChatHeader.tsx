@@ -1,12 +1,12 @@
 // components/HiveBot/ChatHeader.tsx
-import { Bot } from "lucide-react";
+import SplineRobot from "./SplineRobot";
 
 export default function ChatHeader() {
   return (
     <div className="flex-shrink-0 flex items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-4 shadow-lg md:rounded-t-2xl">
       <div className="flex items-center gap-3 animate-slide-in-left">
-        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm transition-transform duration-300 hover:scale-110 hover:rotate-12">
-          <Bot size={20} className="text-white" />
+        <div className="relative w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm overflow-hidden transition-transform duration-300 hover:scale-105">
+          <SplineRobot className="w-full h-full" />
         </div>
         <div>
           <div className="font-bold text-lg">Hive Bot</div>
