@@ -32,7 +32,7 @@ export default function EmojiPopover({ onSelect, className }: Props) {
   }, [onSelect]);
 
   return (
-    <div className={`emoji-popover-container ${className || ""}`}>
+    <div className={`emoji-popover-container animate-scale-up ${className || ""}`}>
       {/* @ts-expect-error: custom element */}
       <emoji-picker ref={ref} class="responsive-emoji-picker"></emoji-picker>
     </div>
