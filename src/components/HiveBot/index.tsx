@@ -129,23 +129,10 @@ export default function HiveBot() {
 
       const cleaned = decodeHtmlEntities(text ?? "");
 
-      // Primary bot answer
+      // Primary bot answer with sources
       setMessages((m) =>
-        m.map((x) => (x.id === botId ? { ...x, text: cleaned || "…" } : x))
+        m.map((x) => (x.id === botId ? { ...x, text: cleaned || "…", sources: sources && sources.length ? sources : undefined } : x))
       );
-
-      // OPTIONAL: append compact sources bubble
-      if (sources && sources.length) {
-        const srcId = generateUUID();
-        setMessages((m) => [
-          ...m,
-          {
-            id: srcId,
-            role: "bot",
-            text: `Sources: ${sources.join(", ")}`,
-          },
-        ]);
-      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to reach the server.";
       setMessages((m) =>
