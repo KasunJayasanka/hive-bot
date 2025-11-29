@@ -39,7 +39,7 @@ export default function SplineRobot({
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative w-full h-full ${className}`}>
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
@@ -51,6 +51,8 @@ export default function SplineRobot({
         style={{
           width: '100%',
           height: '100%',
+          minWidth: '100%',
+          minHeight: '100%',
         }}
       />
     </div>
