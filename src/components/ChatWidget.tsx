@@ -11,7 +11,7 @@ export default function ChatWidget() {
         <>
             {/* Chat Widget */}
             {open && (
-                <div className="fixed bottom-20 right-4 z-50 w-[380px] max-h-[640px] rounded-2xl border border-indigo-100 bg-[var(--card)] shadow-2xl overflow-hidden">
+                <div className="fixed bottom-20 right-4 z-50 w-[380px] max-h-[640px] rounded-2xl border border-indigo-100 bg-[var(--card)] shadow-2xl overflow-hidden animate-scale-up">
                     <HiveBot />
                 </div>
             )}
@@ -20,7 +20,7 @@ export default function ChatWidget() {
             <button
                 onClick={() => setOpen((v) => !v)}
                 aria-label={open ? "Close chat" : "Open chat"}
-                className="fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition hover:bg-indigo-700"
+                className="fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-110 active:scale-95"
             >
                 {open ? <X size={22} /> : <MessageCircle size={22} />}
             </button>

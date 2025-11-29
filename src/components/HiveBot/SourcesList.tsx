@@ -26,7 +26,7 @@ export function SourcesList({ sources }: SourcesListProps) {
   };
 
   return (
-    <div className="mt-3 border-t border-gray-200 dark:border-gray-600 pt-3">
+    <div className="mt-3 border-t border-gray-200 dark:border-gray-600 pt-3 animate-fade-in">
       <div className="flex items-center gap-2 mb-2">
         <ExternalLink className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
         <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
@@ -40,20 +40,26 @@ export function SourcesList({ sources }: SourcesListProps) {
             href={source}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-start gap-2 group"
+            className={`flex items-start gap-2 group animate-slide-up ${
+              idx === 0 ? '' :
+              idx === 1 ? 'animate-delay-75' :
+              idx === 2 ? 'animate-delay-150' :
+              'animate-delay-225'
+            }`}
+            style={{ animationFillMode: 'backwards' }}
           >
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs flex items-center justify-center font-medium mt-0.5">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs flex items-center justify-center font-medium mt-0.5 transition-transform duration-200 group-hover:scale-110">
               {idx + 1}
             </span>
             <div className="flex-1 min-w-0">
-              <div className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline break-all transition-colors">
+              <div className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline break-all transition-colors duration-200">
                 {getDomainName(source)}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400 truncate" title={source}>
                 {truncateUrl(source)}
               </div>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 flex-shrink-0 mt-1 transition-colors" />
+            <ExternalLink className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 flex-shrink-0 mt-1 transition-all duration-200 group-hover:translate-x-0.5" />
           </a>
         ))}
       </div>

@@ -123,7 +123,7 @@ export default function ChatInput({
                 type="button"
                 onClick={() => setEmojiOpen((v) => !v)}
                 className={clsx(
-                  "p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
+                  "p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-110 active:scale-95",
                   emojiOpen && "bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400"
                 )}
                 title="Add emoji"
@@ -163,7 +163,7 @@ export default function ChatInput({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className={clsx(
-                "p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
+                "p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-110 active:scale-95",
                 pendingFile && "bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400"
               )}
               title="Attach image"
