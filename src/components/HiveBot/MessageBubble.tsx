@@ -2,6 +2,8 @@
 import Image from "next/image";
 import clsx from "clsx";
 import { Bot, User } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { ChatItem } from "./types";
 import ThinkingDots from "./ThinkingDots";
 import { SourcesList } from "./SourcesList";
@@ -57,7 +59,15 @@ export default function MessageBubble({ item, onContentLoad }: MessageBubbleProp
               </div>
             ) : (
               <>
-                <div className="text-sm sm:text-base leading-relaxed">{item.text}</div>
+                <div className="text-sm sm:text-base leading-relaxed markdown-content">
+                  {isUser ? (
+                    item.text
+                  ) : (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {item.text || ""}
+                    </ReactMarkdown>
+                  )}
+                </div>
                 {item.sources && item.sources.length > 0 && <SourcesList sources={item.sources} />}
               </>
             )}
