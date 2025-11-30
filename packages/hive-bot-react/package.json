@@ -1,0 +1,76 @@
+{
+  "name": "@kasunjayasanka/hive-bot-react",
+  "version": "1.0.0",
+  "description": "A modern, AI-powered chatbot component for React and Next.js applications with RAG support",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "nextjs",
+    "chatbot",
+    "ai",
+    "rag",
+    "chat",
+    "widget",
+    "component",
+    "gemini",
+    "conversation"
+  ],
+  "author": "Hive Bot Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.4.2",
+    "clsx": "^2.1.1",
+    "emoji-picker-element": "^1.27.0",
+    "lucide-react": "^0.544.0",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "three": "^0.181.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.181.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KasunJayasanka/hive-bot",
+    "directory": "packages/hive-bot-react"
+  },
+  "bugs": {
+    "url": "https://github.com/KasunJayasanka/hive-bot/issues"
+  },
+  "homepage": "https://github.com/KasunJayasanka/hive-bot#readme"
+}

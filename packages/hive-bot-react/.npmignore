@@ -1,0 +1,12 @@
+src/
+tsconfig.json
+tsup.config.ts
+.git
+.gitignore
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
+node_modules/
+.DS_Store
