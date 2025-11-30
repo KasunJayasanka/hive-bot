@@ -1,10 +1,13 @@
 {
-  "name": "@hive-bot/react",
+  "name": "@kasunjayasanka/hive-bot-react",
   "version": "1.0.0",
   "description": "A modern, AI-powered chatbot component for React and Next.js applications with RAG support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

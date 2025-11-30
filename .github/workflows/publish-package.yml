@@ -1,0 +1,66 @@
+name: Publish HiveBot React Package
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (leave empty to use package.json version)'
+        required: false
+
+jobs:
+  publish-gpr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@kasunjayasanka'
+
+      - name: Install dependencies
+        run: |
+          cd packages/hive-bot-react
+          npm ci
+
+      - name: Run type check
+        run: |
+          cd packages/hive-bot-react
+          npm run type-check
+
+      - name: Build package
+        run: |
+          cd packages/hive-bot-react
+          npm run build
+
+      - name: Update version (if specified)
+        if: github.event.inputs.version != ''
+        run: |
+          cd packages/hive-bot-react
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
+
+      - name: Publish to GitHub Packages
+        run: |
+          cd packages/hive-bot-react
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Package info
+        run: |
+          cd packages/hive-bot-react
+          echo "📦 Package published successfully!"
+          echo "Package: @kasunjayasanka/hive-bot-react"
+          echo "Version: $(node -p "require('./package.json').version")"
+          echo ""
+          echo "To install this package:"
+          echo "npm install @kasunjayasanka/hive-bot-react"
